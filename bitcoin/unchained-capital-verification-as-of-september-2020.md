@@ -29,7 +29,7 @@ For this testing, I’ve used only Trezor One and Ledger Nano S.  According to t
 
 ## Website Signup and Privacy Concerns
 
-✔️ I was able to create an account with username, password, email, and phone<br />
+✔️ I was able to [create an account](https://my.unchained-capital.com/sign_up) with username, password, email, and phone<br />
 ⚠️ To create a vault (or a loan), more KYC information is needed (first and last name, date of birth, photo identification, address information)<br />
 ⚠️ Website calls are made to the following fully qualified domain names<br />
   - my.unchained-capital.com
