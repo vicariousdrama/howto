@@ -20,6 +20,7 @@ Within, you’ll see ✔️ indicators for a feature that was verified, and ⚠�
 | --- | --- |
 | 2020-08-19 | Initial Document |
 | 2023-02-19 | Add footers for page numbers, adjust table of contents and symbols |
+| 2023-02-25 | Conversion to Markdown |
 
 ## The Test Bed
 
