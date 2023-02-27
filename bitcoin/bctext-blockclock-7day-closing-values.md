@@ -70,7 +70,17 @@ done <<< "$(echo -e "$dayvalues")"
 # Closing values
 closingvalues=`echo ${ohlc} | jq '.[] | select(.[0] % 86400000 == 0) | .[4] | floor'`
 while read line; do
-  textoutput="${textoutput} ${line}"
+  ll=${#line}
+  case ll in
+    6) textoutput="${textoutput} ${line:0:3}.${line:3:1}K";;
+    7) textoutput="${textoutput} ${line:0:1}.${line:1:3}M";;
+    8) textoutput="${textoutput} ${line:0:2}.${line:2:2}M";;
+    9) textoutput="${textoutput} ${line:0:3}.${line:3:1}M";;
+    10) textoutput="${textoutput} ${line:0:1}.${line:1:3}B";;
+    11) textoutput="${textoutput} ${line:0:2}.${line:2:2}B";;
+    12) textoutput="${textoutput} ${line:0:3}.${line:3:1}B";;
+    *) textoutput="${textoutput} ${line}";;
+  esac
 done <<< "$(echo -e "$closingvalues")"
 
 # Remove leading and trailing spaces
