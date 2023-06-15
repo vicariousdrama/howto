@@ -67,8 +67,11 @@ case $nostrstat in
   *) nostrstat="zaps"
 esac
 
-# Variable for our text output. Will get populated
-textoutput=""
+dispmode=$3
+case $dispmode in
+  "big") ;;
+  *) dispmode="ou"
+esac
 
 # Get nostr stats from nostr.band
 nostrstats=`curl -s -X 'GET' 'https://stats.nostr.band/stats_api?method=stats'`
@@ -76,11 +79,17 @@ nostrstats=`curl -s -X 'GET' 'https://stats.nostr.band/stats_api?method=stats'`
 # Parse the field we want
 nostrvalue=`echo ${nostrstats} | jq ."${nostrstat}"`
 
-# Assemble text
-textoutput="nostr stats from nostr.band ${nostrstat}=${nostrvalue}"
+if [ $dispmode == "ou" ]; then
+  # Assemble text
+  textoutput="nostr stats from nostr.band ${nostrstat}=${nostrvalue}"
+  # Send to the blockclock
+  bctext -wordalign -texttoshow "${textoutput}" -blockclockip "${1}"
+fi
 
-# Send to the blockclock
-bctext -wordalign -texttoshow "${textoutput}" -blockclockip "${1}"
+if [ $dispmode == "big" ]; then
+  u="http://${1}/api/show/number/${nostrvalue}?tl=Number of ${nostrstat} per nostr.band"
+  curl -s "${u}"
+fi
 ```
 
 Save (press CTRL+O) and Exit (press CTRL+X) the file
@@ -116,3 +125,20 @@ Debug results for this text string
     6  ..........      ............    http:///api/ou_text/6/........../............
 ```
 
+The script can optionally accept additional arguments.
+
+The second argument should indicate the field name that you want to report. Valid values are
+- events
+- posts
+- pubkeys
+- relays
+- trusted_users
+- users
+- zap_amount
+- zaps
+
+A third argument can be used to specify the display mode. Valid choices are
+- big - Will display as a large number, with attribution in the top left.
+- ou - Will display using over/under two line text
+
+As of this writing, special handling is not implemented for large numbers. Any number that will not fit in the space of 7 digits will use scientific notation.
