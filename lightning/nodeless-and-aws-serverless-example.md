@@ -73,7 +73,7 @@ We will come back to this later to setup the webbook after defining the API Gate
 
 ## Nodeless: Create API Token
 
-From within Nodess, click on your `Profile` from the App menu on the left, or from the dropdown on your email address in the upper right corner.
+From within Nodeless, click on your `Profile` from the App menu on the left, or from the dropdown on your email address in the upper right corner.
 
 Next, select the `API Tokens` submenu on the Settings page of profile.
 
