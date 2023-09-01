@@ -224,6 +224,9 @@ Specify a name for the policy.  For example `nodeless-example-dynamodb-limited`.
 
 You can close this tab and return to the Lambda function tab.  Click the refresh button on the Execution role line next to the Edit button.  The Resource Summary dropdown will update with 3 different resources representing AWS Lambda, AWS Cloudwatch Logs, and AWS DynamoDB.
 
+![image](https://github.com/vicariousdrama/howto/assets/88121568/b6650e06-038e-4e0b-82c5-99c7112d214f)
+
+
 #### Environment Variables
 
 Switch to the `Environment Variables` tab from the menu on the left.
