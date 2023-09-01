@@ -198,7 +198,31 @@ Following functions you'll see two constants
 
 ### Configuration for Lambda
 
-After saving the code for the lambda function. Click the `Configuration` tab. If not already presented with the environment variables, choose `Environment Variables` from the menu on the left.
+After saving the code for the lambda function. Click the `Configuration` tab. 
+
+#### General Configuration
+
+Switch to the `General Configuration` tab.  Click `Edit`, and set memory to 128 MB and the Timeout to 5 seconds. Click `Save` to apply the changes.
+
+#### Permissions
+
+Switch to the `Permissions` tab from the menu on the left.
+
+When initially created, the role for the function will have permissions for the CloudWatch Logs.  We need to enhance these permissions to give adequate access to the DynamoDB table, as well as be able to invoke lambda functions.
+
+Click the link under the Role name to open the Identity and Access Management for the role in a new tab
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/04f08c03-c7b1-4340-b73f-94b3bf26ecdf)
+
+On the right side of the Permissions view, click `Add Permissions` and choose `Attach policies`.  Filter for `AWSLambdaRole`, check the box next to the role name, and click the `Add permissions` button at the bottom of the screen.  This will grant permission to the role used to run this lambda function to be able to invoke a different lambda function.
+
+
+
+
+
+#### Environment Variables
+
+Switch to the `Environment Variables` tab from the menu on the left.
 
 This lambda function expects 5 environment variables to be setup as follows:
 
@@ -210,7 +234,7 @@ This lambda function expects 5 environment variables to be setup as follows:
 
 Yes, I'm aware there are other ways to abstract out secrets such as the AWS Secrets Manager. For simplicity and reducing number of services needing to setup for this example they've been kept local.
 
-Next, switch to the `General Configuration` tab.  Click `Edit`, and set memory to 128 MB and the Timeout to 5 seconds. Click `Save` to apply the changes.
+
 
 ## AWS: Create Lambda for Building Order
 
