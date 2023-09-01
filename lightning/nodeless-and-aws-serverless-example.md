@@ -175,7 +175,7 @@ If you can't think of a name, choose something like `nodeless-example-api-handle
 
 Click the `Create function` button.
 
-Replace the existing contents of `index.mjs` with that from [nodeless-example/index.mjs](../nodeless-example/index.mjs)
+Replace the existing contents of `index.mjs` with that from [nodeless-example/index.mjs](./nodeless-example/index.mjs)
 
 Once pasted, click the "Deploy" button in the menu bar
 
