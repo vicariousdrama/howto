@@ -10,21 +10,21 @@ by @vicariousdrama
 
 The steps at a high level
 
-Register/Login to Nodeless.io
-Register/Login to Setup AWS.com account
-Nodeless: Setup Withdraw Settings
-Nodeless: Create Store
-Nodeless: Create API Token
-AWS: Create API Gateway for Access
-Nodeless: Create Webhook
-AWS: Create s3 Bucket
-AWS: Create Dynamo Table
-AWS: Create Lambda for Nodeless Webhook and Order Processing
-AWS: Create Lambda for Building Order
-Modify Order Form with Endpoint
-AWS: Upload Static Order Form Page to Bucket
-AWS: Edit API Gateway for Access
-AWS: Set any Roles and Policies
+1. Register/Login to Nodeless.io
+2. Register/Login to Setup AWS.com account
+3. Nodeless: Setup Withdraw Settings
+4. Nodeless: Create Store
+5. Nodeless: Create API Token
+6. AWS: Create API Gateway for Access
+7. Nodeless: Create Webhook
+8. AWS: Create s3 Bucket
+9. AWS: Create Dynamo Table
+10. AWS: Create Lambda for Nodeless Webhook and Order Processing
+11. AWS: Create Lambda for Building Order
+12. Modify Order Form with Endpoint
+13. AWS: Upload Static Order Form Page to Bucket
+14. AWS: Edit API Gateway for Access
+15. AWS: Set any Roles and Policies
 
 todo
 - roles
