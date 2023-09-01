@@ -241,6 +241,37 @@ This lambda function expects 5 environment variables to be setup as follows:
 
 Yes, I'm aware there are other ways to abstract out secrets such as the AWS Secrets Manager. For simplicity and reducing number of services needing to setup for this example they've been kept local.
 
+### Test Settings
+
+Click the `Test` tab at the top.  We'll setup some test events to verify things are working as expected.
+
+#### test-post-codes
+
+Click `Create new event`. For event name, specify `test-post-codes`.  In the Event JSON block, paste the following: 
+
+```json
+{
+  "routeKey": "POST /codes",
+  "body": "{\"vcode\":\"CODE1\"}"
+}
+```
+
+Click `Save`, then `Test`. If you had defined the valueCodes environment variable to include CODE1, as sampled above, you'll see a response like the following
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/74d695fb-da23-4bba-b147-0742c615e190)
+
+#### test-post-orders
+
+Click `Create new event`. For event name, specify `test-post-orders`. In the Event JSON block, paste the following:
+
+```json
+{
+  "routeKey": "POST /orders",
+  "body": "{\"metadata\":{\"bitcoin\":{\"blockheight\":805752},\"height\":1080,\"width\":1920,\"seedtype\":\"blockheight\",\"type\":\"MAZE2307\"},\"discount\":{\"vcode\":\"CODE1\"}}"
+}
+```
+
+Click `Save`, then `Test`. If you had defined the valueCodes environment variable to include CODE1, as sampled above, you'll see a response like the following
 
 
 ## AWS: Create Lambda for Building Order
