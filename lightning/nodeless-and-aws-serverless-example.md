@@ -91,7 +91,7 @@ Configure it as a public access bucket by **unchecking** the box labeled `Block 
 
 Leave the rest of the settings default and click `Create bucket` button at the bottom of the page.
 
-On the [Amazon S3 Buckets page](https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1&region=us-east-1), click your newly created bucket.  Then navigate to the `Permissions` view.  Verify that it has public access, and the Bucket Policy looks something like this
+On the [Amazon S3 Buckets page](https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1&region=us-east-1), click your newly created bucket.  Then navigate to the `Permissions` view.  Edit the Bucket Policy to look like the following, replacing the name of your s3 bucket where it has `nodeless-data-1693591359` in the resource value.
 
 ```json
 {
