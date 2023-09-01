@@ -6,7 +6,25 @@ by @vicariousdrama
 805752-??????
 
 
+---
 
+The steps at a high level
+
+Register/Login to Nodeless.io
+Register/Login to Setup AWS.com account
+Nodeless: Setup Withdraw Settings
+Nodeless: Create Store
+Nodeless: Create API Token
+AWS: Create API Gateway for Access
+Nodeless: Create Webhook
+AWS: Create s3 Bucket
+AWS: Create Dynamo Table
+AWS: Create Lambda for Nodeless Webhook and Order Processing
+AWS: Create Lambda for Building Order
+Modify Order Form with Endpoint
+AWS: Upload Static Order Form Page to Bucket
+AWS: Edit API Gateway for Access
+AWS: Set any Roles and Policies
 
 todo
 - roles
@@ -29,6 +47,18 @@ Amazon Web Services have been around for nearly two decades and is a leader in s
 
 TBD: create account or login
 
+https://aws.amazon.com/console
+
+Create account: https://portal.aws.amazon.com/gp/aws/developer/registration/index.html?nc2=h_ct&src=header_signup
+
+Login: https://console.aws.amazon.com/console/home?nc2=h_ct&src=header-signin
+
+## Nodeless: Setup Withdraw Settings
+
+From the Administration submenu on the left, choose `Withdraw`.  Then pick the Withdraw Settings.
+
+Modify the settings on this page as appropriate to setup your Lightning Address and an On-chain Address. I recommend the Lightning Address as teh default payment method.
+
 ## Nodeless: Create Store
 
 If you don't have an existing Nodeless Store, you can add a new one by clicking `Store` from the Payment submenu on the left, then the `Add Store` button in the upper right. Provide a name for the store.
@@ -50,6 +80,39 @@ Next, select the `API Tokens` submenu on the Settings page of profile.
 Click the button to `Generate Keys` and provide a label.  For this example, I just put `nodeless-example-apikey`
 
 The API token value will be displayed. This is the only time it is displayed. You should save this to some place you can access it later. You will need it when continuing setup with the AWS Lambda function.
+
+## AWS: Create s3 Bucket
+
+The simple storage solution (s3) is where resulting products will be saved when generated, and permissions setup to allow accessing them over the web.
+
+In the AWS Console, access [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1#).
+
+Click the [Create bucket](https://s3.console.aws.amazon.com/s3/bucket/create?region=us-east-1) button in the upper right corner.
+
+You'll need to provide a bucket name.  The name itself doesn't matter but must be unique in the global namespace.  The global namespace is shared across all AWS accounts (nuts, I know, but S3 is like the granddaddy of serverless and they weren't considering namespaces at that time).  In the example below, I use the bucket name `nodeless-data-1693591359`, but you can just as easily use any bucket name, as long as its consistent. I do recommend logical naming, so perhaps you will go with `nodeless-data-` followed by numbers as a suffix. You could use your AWS account number, or the [Unix Epoch Time](https://www.epochconverter.com/). Whatever it takes to still be meaningful and unique.
+
+Configure it as a public access bucket by **unchecking** the box labeled `Block all public access`, and also check the box below to acknowledge those settings might result in the bucket and objects within becoming public.
+
+Leave the rest of the settings default and click `Create bucket` button at the bottom of the page.
+
+On the [Amazon S3 Buckets page](https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1&region=us-east-1), click your newly created bucket.  Then navigate to the `Permissions` view.  Verify that it has public access, and the Bucket Policy looks something like this
+
+```json
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::nodeless-data-1693591359/*"
+        }
+    ]
+}
+```
 
 ## AWS: Create API Gateway for Access
 
@@ -85,6 +148,8 @@ Choose these events
 - Invoice Expired
 
 Click the `Save` button when complete.
+
+At this point, you've setup everything needed on the Nodeless side, and you'll only need to come back to Nodeless to debug or trace orders.
 
 ## AWS: Create Dynamo Table
 
@@ -1034,7 +1099,7 @@ If not already presented with the environment variables, choose `Environment Var
 This lambda function expects 5 environment variables to be setup as follows:
 
 - dynamoTable - The name of the dynamo table created previously for this example (e.g. nodeless-example-orders)
-- s3Bucket - The name of the s3 bucket previously established for storing the output (e.g. nodeless-maze-2307)
+- s3Bucket - The name of the s3 bucket previously established for storing the output (e.g. nodeless-data-1693591359)
 
 Next, switch to the `General Configuration` tab.  Click `Edit`, and set memory to 256 MB and the Timeout to 30 seconds. Click `Save` to apply the changes.
 
