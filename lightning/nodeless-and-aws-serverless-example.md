@@ -216,9 +216,13 @@ Click the link under the Role name to open the Identity and Access Management fo
 
 On the right side of the Permissions view, click `Add Permissions` and choose `Attach policies`.  Filter for `AWSLambdaRole`, check the box next to the role name, and click the `Add permissions` button at the bottom of the screen.  This will grant permission to the role used to run this lambda function to be able to invoke a different lambda function.
 
+Next, click `Add Permissions` again, and choose `Create inline policy`. For service, search for `DynamoDB`.  For actions allowed, expand `Read` and choose `GetItem` and `Scan`.  Under `Write` choose `DeleteItem`, `PutItem` and `UpdateItem`.  Within the Resources section, click `Add Arn`. On the dialog that appears, restrict to resource in `This account`, check the box for `Any region`, and in the Resource table name, `nodeless-example-orders`. Then click the `Add ARNs` button. You may be prompted to confirm the ARNs. After doing so, the dialog will close and the table arn will be updated on the create policy page.  Click `Next` at the bottom of the page.  You'll be presented with a summary of permissions that are being defined in teh policy, which should look like this
 
+![image](https://github.com/vicariousdrama/howto/assets/88121568/da75051e-164f-4b7a-8fe5-1453758962e4)
 
+Specify a name for the policy.  For example `nodeless-example-dynamodb-limited`. Click the `Create Policy` button in the lower right of the page.
 
+You can close this tab and return to the Lambda function tab.  Click the refresh button on the Execution role line next to the Edit button.  The Resource Summary dropdown will update with 3 different resources representing AWS Lambda, AWS Cloudwatch Logs, and AWS DynamoDB.
 
 #### Environment Variables
 
