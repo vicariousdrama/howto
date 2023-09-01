@@ -10,8 +10,9 @@ by @vicariousdrama
 
 todo
 - roles
+- create s3 bucket
 - s3 static page
-- lambda builder
+- lambda builder -- need as zip file to uplaod including binary files
 - guidance on env vars
 
 ---
