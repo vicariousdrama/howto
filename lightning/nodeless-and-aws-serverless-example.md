@@ -21,9 +21,9 @@ The steps at a high level
 9. AWS: Create Dynamo Table
 10. AWS: Create Lambda for Nodeless Webhook and Order Processing
 11. AWS: Create Lambda for Building Order
-12. Modify Order Form with Endpoint
-13. AWS: Upload Static Order Form Page to Bucket
-14. AWS: Edit API Gateway for Access
+12. AWS: Edit API Gateway for Access
+13. Modify Order Form with Endpoint
+14. AWS: Upload Static Order Form Page to Bucket
 15. AWS: Set any Roles and Policies
 
 todo
@@ -260,23 +260,44 @@ This lambda function expects 5 environment variables to be setup as follows:
 
 Next, switch to the `General Configuration` tab.  Click `Edit`, and set memory to 256 MB and the Timeout to 30 seconds. Click `Save` to apply the changes.
 
+## AWS: Edit API Gateway for Access
 
-  
------
+In the AWS Console, access the [API Gateway](https://us-east-1.console.aws.amazon.com/apigateway/main/apis?region=us-east-1).
 
-On step two, click next. We don't have the lambda setup for integration target, so no routes will be defined yet and we will come back to it.
+Click on the API for `nodeless-example-api` or whatever name you chose when initially creating the API endpoint.
+
+### Define Routes
+
+Click `Routes` from the menu on the left.
+
+Click `Create` for each route below
+
+| Method | Path |
+| --- | --- |
+| GET | /orders/{id} |
+| GET | /orders/{id}/detailed |
+| OPTIONS | / |
+| POST | /codes |
+| POST | /nodeless |
+| POST | /orders |
+
+The tree should look like the following
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/58fc663c-476e-474e-a643-9c0c5868309f)
+
+### Establish Integration
+
+Click `Integrations` from the menu on the left.  You'll see the same type of tree as depicted for routes.  
+
+Click the `Manage Integrations` option on the submenu at the top.
+
+Click `Create`.  You can ignore the option to `Attach this integration to a route` at this time. For `Integration target`, choose `Lambda function`.  In the Lambda function search box, select or type in the name of the Lambda function for the Nodeless Webhook and Order Processing. As created above, this is the one named `nodeless-example-webhook`.  Leave the defaults in advanced settings, as well as for invoke permissions. This will establish roles needed to grant permissions.  Click the `Create` button in the bottom right of the page.  
+
+On the Integrations view, choose the `Attach integrations to routes` submenu at the top.
+
+For each of the six operations, select the route, and choose the integration in the dropdown and click `Attach integration`.
+
+This `AWS Lambda` tag will present itself in the tree of routes for those routes that have an integration
+![image](https://github.com/vicariousdrama/howto/assets/88121568/dc2eda22-6ac8-4a98-9e69-2b1dd4496d03)
 
 
-On step two, define the routes.  For this example we need routes for the following
-- /
-  - OPTIONS
-- /codes
-  - POST
-- /nodeless
-  - POST
-- /orders
-  - POST
-  - /{id}
-    - GET
-    - /detailed
-      - GET
