@@ -132,7 +132,11 @@ Back in Nodeless, navigate to the store page you had setup.  On the submenu that
 
 Click the `New Webhook` action on the right side.
 
-In the URL field, specify the value of the Invoke URL from the API Gateway, with the path appended as `/nodeless`. For example, my Invoke URL was `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com`, so the URL I specify is `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/nodeless`
+In the URL field, specify the value of the Invoke URL from the API Gateway, with the path appended as `/nodeless`. 
+
+For example, my Invoke URL was `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com`.
+
+The URL I specify is `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/nodeless`
 
 Make note of the generated Secret value.  You'll need to capture this and use in configuration later to properly validate signed messages sent from Nodeless to the webhook endpoint.
 
