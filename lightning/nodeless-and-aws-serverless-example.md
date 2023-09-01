@@ -43,15 +43,9 @@ If you haven't already done so, [sign up for an account](https://nodeless.io/app
 
 # Amazon Web Services
 
-Amazon Web Services have been around for nearly two decades and is a leader in serverless technology. 
+Amazon Web Services have been around for nearly two decades and is a leader in serverless technology.  This example will make use of API Gateway, DynamoDB, Lambda Functions and an s3 Bucket.
 
-TBD: create account or login
-
-https://aws.amazon.com/console
-
-Create account: https://portal.aws.amazon.com/gp/aws/developer/registration/index.html?nc2=h_ct&src=header_signup
-
-Login: https://console.aws.amazon.com/console/home?nc2=h_ct&src=header-signin
+If you haven't already done so, [create an account](https://portal.aws.amazon.com/gp/aws/developer/registration/index.html) or [login](https://console.aws.amazon.com/console/home) to the console.
 
 ## Nodeless: Setup Withdraw Settings
 
