@@ -87,6 +87,8 @@ You'll need to provide a bucket name.  The name itself doesn't matter but must b
 
 Configure it as a public access bucket by **unchecking** the box labeled `Block all public access`, and also check the box below to acknowledge those settings might result in the bucket and objects within becoming public.
 
+![image](https://github.com/vicariousdrama/howto/assets/88121568/0d94266b-3ec9-4645-b490-2be37de4783b)
+
 Leave the rest of the settings default and click `Create bucket` button at the bottom of the page.
 
 On the [Amazon S3 Buckets page](https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1&region=us-east-1), click your newly created bucket.  Then navigate to the `Permissions` view.  Verify that it has public access, and the Bucket Policy looks something like this
