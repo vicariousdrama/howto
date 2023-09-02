@@ -5,6 +5,13 @@ by @vicariousdrama
 
 805752-805826
 
+---
+
+# Summary
+
+This howto will walk you through the steps of setting up a serverless setup in AWS Cloud that uses nodeless as a payment processor.  Within nodeless, you'll configure the store, a webhook for events, and API token.  Within AWS Cloud, an API Gateway will act as the primary _front door_ to API calls for the user orders, as well as webhooks from nodeless. A general Lambda function will handle the routes from the API Gateway, and a specialized one will serve as an example of an invocation to build a product after the invoice has been paid. A DyanmoDB Table is used as a basic data store for meta information, while files created are placed in an S3 bucket given public access for reading.
+
+![high level diagram](./nodeless-example/nodeless-and-aws-serverless-example.drawio.png)
 
 ---
 
@@ -13,26 +20,20 @@ The steps at a high level
 1. [Register/Login to Nodeless.io](#nodelessio)
 2. [Register/Login to Setup AWS.com account](#amazon-web-services)
 3. [Nodeless: Setup Withdraw Settings](#nodeless-setup-withdraw-settings)
-4. Nodeless: Create Store
-5. Nodeless: Create API Token
-6. AWS: Create API Gateway for Access
-7. Nodeless: Create Webhook
-8. AWS: Create s3 Bucket
-9. AWS: Create Dynamo Table
-10. AWS: Create Identity and Access Management Policy and Role
-11. AWS: Create Lambda for Nodeless Webhook and Order Processing
-12. AWS: Create Lambda for Building Order
-13. AWS: Edit API Gateway for Access
-14. Modify Order Form with Endpoint
-15. AWS: Upload Static Order Form Page to Bucket
+4. [Nodeless: Create Store](#nodeless-create-store)
+5. [Nodeless: Create API Token](#nodeless-create-api-token)
+6. [AWS: Create API Gateway for Access](#aws-create-api-gateway)
+7. [Nodeless: Create Webhook](#nodeless-create-webhook)
+8. [AWS: Create s3 Bucket](#aws-create-s3-bucket)
+9. [AWS: Create Dynamo Table](#aws-create-dynamo-table)
+10. [AWS: Create Identity and Access Management Policy and Role](#aws-create-identity-and-access-management-policy-and-role)
+11. [AWS: Create Lambda for Nodeless Webhook and Order Processing](#aws-create-lambda-for-nodeless-webhook-and-order-processing)
+12. [AWS: Create Lambda for Building Order](#aws-create-lambda-for-building-order)
+13. [AWS: Edit API Gateway for Access](#aws-edit-api-gateway-for-access)
+14. [Modify Order Form with Endpoint](#modify-order-form-with-endpoint)
+15. [AWS: Upload Static Order Form Page to Bucket](#aws-upload-static-order-form-page-to-bucket)
 
 ---
-
-# Summary
-
-This howto will walk you through the steps of setting up a serverless setup in AWS Cloud that uses nodeless as a payment processor.  Within nodeless, you'll configure the store, a webhook for events, and API token.  Within AWS Cloud, an API Gateway will act as the primary _front door_ to API calls for the user orders, as well as webhooks from nodeless. A general Lambda function will handle the routes from the API Gateway, and a specialized one will serve as an example of an invocation to build a product after the invoice has been paid. A DyanmoDB Table is used as a basic data store for meta information, while files created are placed in an S3 bucket given public access for reading.
-
-![high level diagram](./nodeless-example/nodeless-and-aws-serverless-example.drawio.png)
 
 # Nodeless.io
 
@@ -73,41 +74,6 @@ Next, select the `API Tokens` submenu on the Settings page of profile.
 Click the button to `Generate Keys` and provide a label.  For this example, I just put `nodeless-example-apikey`
 
 The API token value will be displayed. This is the only time it is displayed. You should save this to some place you can access it later. You will need it when continuing setup with the AWS Lambda function.
-
-# AWS: Create s3 Bucket
-
-The simple storage solution (s3) is where resulting products will be saved when generated, and permissions setup to allow accessing them over the web.
-
-In the AWS Console, access [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1#).
-
-Click the [Create bucket](https://s3.console.aws.amazon.com/s3/bucket/create?region=us-east-1) button in the upper right corner.
-
-You'll need to provide a bucket name.  The name itself doesn't matter but must be unique in the global namespace.  The global namespace is shared across all AWS accounts (nuts, I know, but S3 is like the granddaddy of serverless and they weren't considering namespaces at that time).  In the example below, I use the bucket name `nodeless-data-1693591359`, but you can just as easily use any bucket name, as long as its consistent. I do recommend logical naming, so perhaps you will go with `nodeless-data-` followed by numbers as a suffix. You could use your AWS account number, or the [Unix Epoch Time](https://www.epochconverter.com/). Whatever it takes to still be meaningful and unique.
-
-Configure it as a public access bucket by **unchecking** the box labeled `Block all public access`, and also check the box below to acknowledge those settings might result in the bucket and objects within becoming public.
-
-![image](https://github.com/vicariousdrama/howto/assets/88121568/0d94266b-3ec9-4645-b490-2be37de4783b)
-
-Leave the rest of the settings default and click `Create bucket` button at the bottom of the page.
-
-On the [Amazon S3 Buckets page](https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1&region=us-east-1), click your newly created bucket.  Then navigate to the `Permissions` view.  Edit the Bucket Policy to look like the following, replacing the name of your s3 bucket where it has `nodeless-data-1693591359` in the resource value.
-
-```json
-{
-    "Version": "2008-10-17",
-    "Statement": [
-        {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "*"
-            },
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::nodeless-data-1693591359/*"
-        }
-    ]
-}
-```
 
 # AWS: Create API Gateway for Access
 
@@ -150,7 +116,42 @@ Click the `Save` button when complete.
 
 At this point, you've setup everything needed on the Nodeless side, and you'll only need to come back to Nodeless to debug or trace orders.
 
-## AWS: Create Dynamo Table
+# AWS: Create s3 Bucket
+
+The simple storage solution (s3) is where resulting products will be saved when generated, and permissions setup to allow accessing them over the web.
+
+In the AWS Console, access [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1#).
+
+Click the [Create bucket](https://s3.console.aws.amazon.com/s3/bucket/create?region=us-east-1) button in the upper right corner.
+
+You'll need to provide a bucket name.  The name itself doesn't matter but must be unique in the global namespace.  The global namespace is shared across all AWS accounts (nuts, I know, but S3 is like the granddaddy of serverless and they weren't considering namespaces at that time).  In the example below, I use the bucket name `nodeless-data-1693591359`, but you can just as easily use any bucket name, as long as its consistent. I do recommend logical naming, so perhaps you will go with `nodeless-data-` followed by numbers as a suffix. You could use your AWS account number, or the [Unix Epoch Time](https://www.epochconverter.com/). Whatever it takes to still be meaningful and unique.
+
+Configure it as a public access bucket by **unchecking** the box labeled `Block all public access`, and also check the box below to acknowledge those settings might result in the bucket and objects within becoming public.
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/0d94266b-3ec9-4645-b490-2be37de4783b)
+
+Leave the rest of the settings default and click `Create bucket` button at the bottom of the page.
+
+On the [Amazon S3 Buckets page](https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1&region=us-east-1), click your newly created bucket.  Then navigate to the `Permissions` view.  Edit the Bucket Policy to look like the following, replacing the name of your s3 bucket where it has `nodeless-data-1693591359` in the resource value.
+
+```json
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::nodeless-data-1693591359/*"
+        }
+    ]
+}
+```
+
+# AWS: Create Dynamo Table
 
 In the AWS Console, access the [DynamoDB Tables](https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#tables).
 
