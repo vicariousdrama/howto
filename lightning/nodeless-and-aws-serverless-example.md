@@ -21,11 +21,11 @@ The steps at a high level
 9. AWS: Create Dynamo Table
 10. AWS: Create Identity and Access Management Policy and Role
 11. AWS: Create Lambda for Nodeless Webhook and Order Processing
-12. 
-13. AWS: Create Lambda for Building Order
+12. AWS: Create Lambda for Building Order
 14. AWS: Edit API Gateway for Access
-15. Modify Order Form with Endpoint
-16. AWS: Upload Static Order Form Page to Bucket
+15. 
+16. Modify Order Form with Endpoint
+17. AWS: Upload Static Order Form Page to Bucket
 
 
 todo
@@ -465,9 +465,19 @@ Replace the id value to match that from the response of the order post
 }
 ```
 
-Click `Save`, then `Test`.
+Click `Save`.
 
+Before running the `Test`, you'll need to open a tab to [navigate to the DynamoDB Tables](https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#item-explorer), [choose the respective table](https://us-east-1.console.aws.amazon.com/dynamodbv2/home?region=us-east-1#item-explorer?table=nodeless-example-orders), locate the order in the dynamo table, and change the invoice status from `pending` to `paid`.  
 
+You can use the filters to search for a specific item as follows
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/47305e0c-a894-4459-b588-854562e890c1)
+
+Click the link to edit the item, and then expand the invoice attribute to reveal its nested fields. Set the status to `paid`.  If you've previously run this order, you may need to also expand `fulfillment` and set status to `pending`.  After making changes, click the `Save changes` button at the bottom of the page, and then return to the test.
+
+Click the `Test` button to run the test. If it was built successfully, you'll see a response like the following
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/d357e912-101e-4c81-ab51-5dff4b1d1bcd)
 
 ## AWS: Edit API Gateway for Access
 
