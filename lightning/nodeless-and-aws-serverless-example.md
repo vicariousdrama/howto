@@ -10,9 +10,9 @@ by @vicariousdrama
 
 The steps at a high level
 
-1. Register/Login to Nodeless.io
-2. Register/Login to Setup AWS.com account
-3. Nodeless: Setup Withdraw Settings
+1. [Register/Login to Nodeless.io](#nodelessio)
+2. [Register/Login to Setup AWS.com account](#amazon-web-services)
+3. [Nodeless: Setup Withdraw Settings](#nodeless-setup-withdraw-settings)
 4. Nodeless: Create Store
 5. Nodeless: Create API Token
 6. AWS: Create API Gateway for Access
@@ -28,7 +28,7 @@ The steps at a high level
 
 ---
 
-# High Level Architecture
+# Summary
 
 This howto will walk you through the steps of setting up a serverless setup in AWS Cloud that uses nodeless as a payment processor.  Within nodeless, you'll configure the store, a webhook for events, and API token.  Within AWS Cloud, an API Gateway will act as the primary _front door_ to API calls for the user orders, as well as webhooks from nodeless. A general Lambda function will handle the routes from the API Gateway, and a specialized one will serve as an example of an invocation to build a product after the invoice has been paid. A DyanmoDB Table is used as a basic data store for meta information, while files created are placed in an S3 bucket given public access for reading.
 
@@ -46,13 +46,13 @@ Amazon Web Services have been around for nearly two decades and is a leader in s
 
 If you haven't already done so, [create an account](https://portal.aws.amazon.com/gp/aws/developer/registration/index.html) or [login](https://console.aws.amazon.com/console/home) to the console.
 
-## Nodeless: Setup Withdraw Settings
+# Nodeless: Setup Withdraw Settings
 
 From the Administration submenu on the left, choose `Withdraw`.  Then pick the Withdraw Settings.
 
 Modify the settings on this page as appropriate to setup your Lightning Address and an On-chain Address. I recommend the Lightning Address as teh default payment method.
 
-## Nodeless: Create Store
+# Nodeless: Create Store
 
 If you don't have an existing Nodeless Store, you can add a new one by clicking `Store` from the Payment submenu on the left, then the `Add Store` button in the upper right. Provide a name for the store.
 
@@ -64,7 +64,7 @@ In this example, my store name is `test-store`, and the ID is `d809bb04-bb3a-4d8
 
 We will come back to this later to setup the webbook after defining the API Gateway for Access in AWS.
 
-## Nodeless: Create API Token
+# Nodeless: Create API Token
 
 From within Nodeless, click on your `Profile` from the App menu on the left, or from the dropdown on your email address in the upper right corner.
 
@@ -74,7 +74,7 @@ Click the button to `Generate Keys` and provide a label.  For this example, I ju
 
 The API token value will be displayed. This is the only time it is displayed. You should save this to some place you can access it later. You will need it when continuing setup with the AWS Lambda function.
 
-## AWS: Create s3 Bucket
+# AWS: Create s3 Bucket
 
 The simple storage solution (s3) is where resulting products will be saved when generated, and permissions setup to allow accessing them over the web.
 
@@ -109,7 +109,7 @@ On the [Amazon S3 Buckets page](https://s3.console.aws.amazon.com/s3/buckets?reg
 }
 ```
 
-## AWS: Create API Gateway for Access
+# AWS: Create API Gateway for Access
 
 You can think of an API Gateway as a basic contract or schematic of operations allowed to your backend service from the internet. It provides for an endpoint that can be called, and permits routing operations to handlers.
 
@@ -127,7 +127,7 @@ Once created, you'll be looking at the details for the API, and you'll see an In
 
 For example, the Invoke URL that was created for my API is https://eahilxrhrg.execute-api.us-east-1.amazonaws.com
 
-## Nodeless: Create Webhook
+# Nodeless: Create Webhook
 
 Back in Nodeless, navigate to the store page you had setup.  On the submenu that appears, you can choose `Webhooks`
 
@@ -162,7 +162,7 @@ For the partition key, specify `id`
 
 Leave the rest of the data defaulted and click `Create table` at the bottom.
 
-## AWS: Create Identity and Access Management Policy and Role
+# AWS: Create Identity and Access Management Policy and Role
 
 Now we'll define a custom IAM role for use by the Lambda functions that will be created later.  This will have appropriate permissions for writing logs to cloudwatch, the necessary permissions for the DynamoDB table, and access to the S3 Bucket.
 
@@ -257,7 +257,7 @@ Enter a name for the policy `nodeless-example-policy`. Click `Create policy` at 
 
 Return to the page where creating the role. Refresh the list of policies. Check the box for `nodeless-example-policy` and then click `Next`.  Name the role `nodeless-example-role` and click `Create role`
 
-## AWS: Create Lambda for Nodeless Webhook and Order Processing
+# AWS: Create Lambda for Nodeless Webhook and Order Processing
 
 This is the main lambda used for calls from users for placing orders, and for interfacing with Nodeless.
 
@@ -290,15 +290,15 @@ Following functions you'll see two constants
 - export const handler - This is the entry point into the lambda and from which the functions above are called along with the intended API spec
 - b39 - This is the bip39 word list, delimited by spaces, then split into a list for reference by the makeId function
 
-### Configuration for Lambda
+## Configuration for Lambda
 
 After saving the code for the lambda function. Click the `Configuration` tab. 
 
-#### General Configuration
+### General Configuration
 
 Switch to the `General Configuration` tab.  Click `Edit`, and set memory to 128 MB and the Timeout to 5 seconds. Click `Save` to apply the changes.
 
-#### Permissions
+### Permissions
 
 Switch to the `Permissions` tab from the menu on the left.
 
@@ -306,7 +306,7 @@ Verify that the resource summary shows that the role chosen has access to Lambda
 
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/14951d0e-f0a2-42f1-94ce-7120937754bd)
 
-#### Environment Variables
+### Environment Variables
 
 Switch to the `Environment Variables` tab from the menu on the left.
 
@@ -320,11 +320,11 @@ This lambda function expects 5 environment variables to be setup as follows:
 
 Yes, I'm aware there are other ways to abstract out secrets such as the AWS Secrets Manager. For simplicity and reducing number of services needing to setup for this example they've been kept local.
 
-### Test Settings
+## Test Settings
 
 Click the `Test` tab at the top.  We'll setup some test events to verify things are working as expected.
 
-#### test-post-codes
+### test-post-codes
 
 Click `Create new event`. For event name, specify `test-post-codes`.  In the Event JSON block, paste the following: 
 
@@ -339,7 +339,7 @@ Click `Save`, then `Test`. If you had defined the valueCodes environment variabl
 
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/74d695fb-da23-4bba-b147-0742c615e190)
 
-#### test-post-orders
+### test-post-orders
 
 Click `Create new event`. For event name, specify `test-post-orders`. In the Event JSON block, paste the following:
 
@@ -356,7 +356,7 @@ Click `Save`, then `Test`. If you had defined the valueCodes environment variabl
 
 Make note of the ORDER value to use for the next test. In my test run the order number was `ORDER-RAOBIV-ICLI-ASUORG`
 
-#### test-get-order
+### test-get-order
 
 Click `Create new event`. For event name, specify `test-get-order`. In the Event JSON block, paste the following:
 
@@ -377,7 +377,7 @@ Click `Save`, then `Test`.
 
 The response body indicates a status (s) of new (n).
 
-#### test-get-order-detailed
+### test-get-order-detailed
 
 Click `Create new event`. For event name, specify `test-get-order-detailed`. In the Event JSON block, paste the following:
 
@@ -394,7 +394,7 @@ Replace the id value to match that from the response of the order post
 
 Click `Save`, then `Test`.  The full details for the order will be returned similar to that returned when posting the order.
 
-## AWS: Create Lambda for Building Order
+# AWS: Create Lambda for Building Order
 
 The previous lambda is somewhat general purpose to facilitate order placement.  This lambda is focused on work for the MAZE2307 product type mapped to a function named nodeless-example-build-maze-2307.  
 
@@ -420,7 +420,7 @@ On the Code Source view, in the upper right corner, choose `Upload from` and pic
 
 In the file tree to the left, you should see a series of folders and the replaced lambda_function.py.  The folders for config, data, imageoutput, and mock-data are supposed to be empty. Some of the python files in the scripts folder attempt to read from them or want to write to them and expect them to exist.  The scripts folder is a modified version of the similarly named files from the Nodeyez project. The images folder contains just the files needed for the maze production.
 
-### Adding Layers
+## Adding Layers
 
 We will need to add layers for Pillow, numpy, requests, and boto3.  
 
@@ -431,15 +431,15 @@ For each of these, click Add a layer.  Then choose `Specify an ARN`, and provide
 - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-requests:3
 - arn:aws:lambda:us-east-1:770693421928:layer:Klayers-p310-boto3:3
 
-### Configuration for Lambda
+## Configuration for Lambda
 
 After saving the code for the lambda function. Click the `Configuration` tab. 
 
-#### General Configuration
+### General Configuration
 
 Switch to the `General Configuration` tab.  Click `Edit`, and set memory to 256 MB and the Timeout to 30 seconds. Click `Save` to apply the changes.
 
-#### Environment Variables
+### Environment Variables
 
 If not already presented with the environment variables, choose `Environment Variables` from the menu on the left.
 
@@ -448,11 +448,11 @@ This lambda function expects 5 environment variables to be setup as follows:
 - dynamoTable - The name of the dynamo table created previously for this example (e.g. nodeless-example-orders)
 - s3Bucket - The name of the s3 bucket previously established for storing the output (e.g. nodeless-data-1693591359)
 
-### Test Settings
+## Test Settings
 
 Click the `Test` tab at the top.  We'll setup some test events to verify things are working as expected.
 
-#### test-build-order
+### test-build-order
 
 Click `Create new event`. For event name, specify `test-build-order`. In the Event JSON block, paste the following:
 
@@ -478,13 +478,13 @@ Click the `Test` button to run the test. If it was built successfully, you'll se
 
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/d357e912-101e-4c81-ab51-5dff4b1d1bcd)
 
-## AWS: Edit API Gateway for Access
+# AWS: Edit API Gateway for Access
 
 In the AWS Console, access the [API Gateway](https://us-east-1.console.aws.amazon.com/apigateway/main/apis?region=us-east-1).
 
 Click on the API for `nodeless-example-api` or whatever name you chose when initially creating the API endpoint.
 
-### Define Routes
+## Define Routes
 
 Click `Routes` from the menu on the left.
 
@@ -503,7 +503,7 @@ The tree should look like the following
 
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/58fc663c-476e-474e-a643-9c0c5868309f)
 
-### Establish Integration
+## Establish Integration
 
 Click `Integrations` from the menu on the left.  You'll see the same type of tree as depicted for routes.  
 
@@ -519,7 +519,7 @@ This `AWS Lambda` tag will present itself in the tree of routes for those routes
 
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/dc2eda22-6ac8-4a98-9e69-2b1dd4496d03)
 
-### Test the API
+## Test the API
 
 Open a web browser, and try to set retrieving details about an order using the endpoint and adding the path.  
 
@@ -545,7 +545,7 @@ If you retrieve the order without the detailed endpoint using the url `https://e
 
 Other operations can be tested using curl
 
-## Modify Order Form with Endpoint
+# Modify Order Form with Endpoint
 
 Download this html file: [nodeless-example/maze.html](./nodeless-example/maze.html)
 
@@ -557,7 +557,7 @@ Modify the value to reflect the endpoint for the API Gateway.  For the example c
 
 Save the file.
 
-## AWS: Upload Static Order Form Page to Bucket
+# AWS: Upload Static Order Form Page to Bucket
 
 In the AWS Console, access [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1#).
 
