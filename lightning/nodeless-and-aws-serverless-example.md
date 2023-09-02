@@ -1,4 +1,4 @@
-# Nodeless and AWS Serverless Example
+# Nodeless.io and AWS Serverless Example
 _An example of integrating AWS Serverless with Nodeless.io and accepting payments_
 
 by @vicariousdrama
