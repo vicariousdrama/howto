@@ -166,7 +166,7 @@ function invokeBuilder(orderItem) {
   let functionName = null;
   // Map to the function to be called
   if(orderItem.metadata.type == "MAZE2307") {
-    functionName = "build-maze-2307"; 
+    functionName = "nodeless-example-build-maze-2307"; 
   }
   if(functionName == null) {
     console.log(`invokeBuilder called, but functionName could not be set from type: ${orderItem.metadata.type}`);
