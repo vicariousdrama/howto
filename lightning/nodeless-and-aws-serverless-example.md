@@ -530,6 +530,20 @@ The full URL is `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/orders/O
 
 When pasting that URL into the browser, I get back the JSON of the order details.  At the end there is the `fulfillment` attribute with a nested field of the `url` if it was built that can also be accessed to download the image created.
 
+If you retrieve the order without the detailed endpoint using the url `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/orders/ORDER-RAOBIV-ICLI-ASUORG`, the response will be much shorter, revealing only the essential information.  In this case
+
+```json
+{
+  "s":"e",
+  "fs":"d",
+  "fu":"https://nodeless-data-1693591359.s3.amazonaws.com/orders/maze2307/ORDER-RAOBIV-ICLI-ASUORG.png"
+}
+```
+
+- s : the overall status. `e` here denotes `expired` as the invoice timed out
+- fs : the fulfillment status. `d` in this instance denotes `done`
+- fu : the fulfillment url. 
+
 Other operations can be tested using curl
 
 ## Modify Order Form with Endpoint
