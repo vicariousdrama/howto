@@ -420,7 +420,7 @@ In the AWS Console, access the [AWS Lambda Functions](https://us-east-1.console.
 
 Click the [Create Function](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/create/function) button in the upper right corner.
 
-For function name, specify `build-maze-2307`. This should match the value referenced by the invokeBuilder function in the nodeless-example-api-handler
+For function name, specify `nodeless-example-build-maze-2307`. This should match the value referenced by the invokeBuilder function in the nodeless-example-api-handler Lambda function and the nodeless-example-policy IAM policy.
 
 For Runtime, choose Python 3.10 from Other Supported. And keep x86_64 as the architecture.
 
@@ -491,7 +491,7 @@ Click `Integrations` from the menu on the left.  You'll see the same type of tre
 
 Click the `Manage Integrations` option on the submenu at the top.
 
-Click `Create`.  You can ignore the option to `Attach this integration to a route` at this time. For `Integration target`, choose `Lambda function`.  In the Lambda function search box, select or type in the name of the Lambda function for the Nodeless Webhook and Order Processing. As created above, this is the one named `nodeless-example-webhook`.  Leave the defaults in advanced settings, as well as for invoke permissions. This will establish roles needed to grant permissions.  Click the `Create` button in the bottom right of the page.  
+Click `Create`.  You can ignore the option to `Attach this integration to a route` at this time. For `Integration target`, choose `Lambda function`.  In the Lambda function search box, select or type in the name of the Lambda function for the Nodeless Webhook and Order Processing. As created above, this is the one named `nodeless-example-api-handler`.  Leave the defaults in advanced settings, as well as for invoke permissions. This will establish roles needed to grant permissions.  Click the `Create` button in the bottom right of the page.  
 
 On the Integrations view, choose the `Attach integrations to routes` submenu at the top.
 
