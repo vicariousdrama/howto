@@ -20,18 +20,17 @@ The steps at a high level
 8. AWS: Create s3 Bucket
 9. AWS: Create Dynamo Table
 10. AWS: Create Lambda for Nodeless Webhook and Order Processing
-11. AWS: Create Lambda for Building Order
-12. AWS: Edit API Gateway for Access
-13. Modify Order Form with Endpoint
-14. AWS: Upload Static Order Form Page to Bucket
-15. AWS: Set any Roles and Policies
+11. 
+12. AWS: Create Lambda for Building Order
+13. AWS: Edit API Gateway for Access
+14. Modify Order Form with Endpoint
+15. AWS: Upload Static Order Form Page to Bucket
+
 
 todo
-- roles
-- create s3 bucket
+- permissions and tests for lambda for building order
 - s3 static page
-- lambda builder -- need as zip file to uplaod including binary files
-- guidance on env vars
+
 
 ---
 
