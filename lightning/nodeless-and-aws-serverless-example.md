@@ -213,7 +213,7 @@ On the `Add permissions` page, click `Create policy`.  This will open a new tab 
                 "dynamodb:Scan",
                 "dynamodb:UpdateItem"
             ],
-            "Resource": "arn:aws:dynamodb:::table/nodeless-example-orders/*"
+            "Resource": "arn:aws:dynamodb:*:*:table/nodeless-example-orders"
         },
         {
             "Effect": "Allow",
@@ -303,24 +303,9 @@ Switch to the `General Configuration` tab.  Click `Edit`, and set memory to 128 
 
 Switch to the `Permissions` tab from the menu on the left.
 
-When initially created, the role for the function will have permissions for the CloudWatch Logs.  We need to enhance these permissions to give adequate access to the DynamoDB table, as well as be able to invoke lambda functions.
+Verify that the resource summary shows that the role chosen has access to Lambda, CloudWatch Logs, DynamoDB and S3
 
-Click the link under the Role name to open the Identity and Access Management for the role in a new tab
-
-![image](https://github.com/vicariousdrama/howto/assets/88121568/04f08c03-c7b1-4340-b73f-94b3bf26ecdf)
-
-On the right side of the Permissions view, click `Add Permissions` and choose `Attach policies`.  Filter for `AWSLambdaRole`, check the box next to the role name, and click the `Add permissions` button at the bottom of the screen.  This will grant permission to the role used to run this lambda function to be able to invoke a different lambda function.
-
-Next, click `Add Permissions` again, and choose `Create inline policy`. For service, search for `DynamoDB`.  For actions allowed, expand `Read` and choose `GetItem` and `Scan`.  Under `Write` choose `DeleteItem`, `PutItem` and `UpdateItem`.  Within the Resources section, click `Add Arn`. On the dialog that appears, restrict to resource in `This account`, check the box for `Any region`, and in the Resource table name, `nodeless-example-orders`. Then click the `Add ARNs` button. You may be prompted to confirm the ARNs. After doing so, the dialog will close and the table arn will be updated on the create policy page.  Click `Next` at the bottom of the page.  You'll be presented with a summary of permissions that are being defined in teh policy, which should look like this
-
-![image](https://github.com/vicariousdrama/howto/assets/88121568/da75051e-164f-4b7a-8fe5-1453758962e4)
-
-Specify a name for the policy.  For example `nodeless-example-dynamodb-limited`. Click the `Create Policy` button in the lower right of the page.
-
-You can close this tab and return to the Lambda function tab.  Click the refresh button on the Execution role line next to the Edit button.  The Resource Summary dropdown will update with 3 different resources representing AWS Lambda, AWS Cloudwatch Logs, and AWS DynamoDB.
-
-![image](https://github.com/vicariousdrama/howto/assets/88121568/b6650e06-038e-4e0b-82c5-99c7112d214f)
-
+![image](https://github.com/vicariousdrama/howto/assets/88121568/14951d0e-f0a2-42f1-94ce-7120937754bd)
 
 #### Environment Variables
 
@@ -451,6 +436,12 @@ For each of these, click Add a layer.  Then choose `Specify an ARN`, and provide
 
 After saving the code for the lambda function. Click the `Configuration` tab. 
 
+#### General Configuration
+
+Switch to the `General Configuration` tab.  Click `Edit`, and set memory to 256 MB and the Timeout to 30 seconds. Click `Save` to apply the changes.
+
+#### Environment Variables
+
 If not already presented with the environment variables, choose `Environment Variables` from the menu on the left.
 
 This lambda function expects 5 environment variables to be setup as follows:
@@ -458,7 +449,11 @@ This lambda function expects 5 environment variables to be setup as follows:
 - dynamoTable - The name of the dynamo table created previously for this example (e.g. nodeless-example-orders)
 - s3Bucket - The name of the s3 bucket previously established for storing the output (e.g. nodeless-data-1693591359)
 
-Next, switch to the `General Configuration` tab.  Click `Edit`, and set memory to 256 MB and the Timeout to 30 seconds. Click `Save` to apply the changes.
+### Test Settings
+
+Click the `Test` tab at the top.  We'll setup some test events to verify things are working as expected.
+
+TBD
 
 ## AWS: Edit API Gateway for Access
 
