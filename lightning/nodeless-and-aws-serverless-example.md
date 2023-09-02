@@ -517,8 +517,20 @@ On the Integrations view, choose the `Attach integrations to routes` submenu at 
 For each of the six operations, select the route, and choose the integration in the dropdown and click `Attach integration`.
 
 This `AWS Lambda` tag will present itself in the tree of routes for those routes that have an integration
+
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/dc2eda22-6ac8-4a98-9e69-2b1dd4496d03)
 
+### Test the API
+
+Open a web browser, and try to set retrieving details about an order using the endpoint and adding the path.  
+
+This example has an API Gateway endpoint of `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com`.  The order ID I want to use is `ORDER-RAOBIV-ICLI-ASUORG`.
+
+The full URL is `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/orders/ORDER-RAOBIV-ICLI-ASUORG/detailed`
+
+When pasting that URL into the browser, I get back the JSON of the order details.  At the end there is the `fulfillment` attribute with a nested field of the `url` if it was built that can also be accessed to download the image created.
+
+Other operations can be tested using curl
 
 ## Modify Order Form with Endpoint
 
