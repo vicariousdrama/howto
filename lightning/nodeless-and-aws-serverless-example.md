@@ -496,3 +496,10 @@ This `AWS Lambda` tag will present itself in the tree of routes for those routes
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/dc2eda22-6ac8-4a98-9e69-2b1dd4496d03)
 
 
+## Modify Order Form with Endpoint
+
+TBD
+
+## AWS: Upload Static Order Form Page to Bucket
+
+TBD
