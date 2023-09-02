@@ -19,12 +19,13 @@ The steps at a high level
 7. Nodeless: Create Webhook
 8. AWS: Create s3 Bucket
 9. AWS: Create Dynamo Table
-10. AWS: Create Lambda for Nodeless Webhook and Order Processing
-11. 
-12. AWS: Create Lambda for Building Order
-13. AWS: Edit API Gateway for Access
-14. Modify Order Form with Endpoint
-15. AWS: Upload Static Order Form Page to Bucket
+10. AWS: Create Lambda Execution Role
+11. AWS: Create Lambda for Nodeless Webhook and Order Processing
+12. 
+13. AWS: Create Lambda for Building Order
+14. AWS: Edit API Gateway for Access
+15. Modify Order Form with Endpoint
+16. AWS: Upload Static Order Form Page to Bucket
 
 
 todo
@@ -162,6 +163,101 @@ For the partition key, specify `id`
 
 Leave the rest of the data defaulted and click `Create table` at the bottom.
 
+## AWS: Create Lambda Execution Role
+
+Now we'll define a custom IAM role for use by the Lambda functions that will be created later.  This will have appropriate permissions for writing logs to cloudwatch, the necessary permissions for the DynamoDB table, and access to the S3 Bucket.
+
+In the AWS Console, access the [Identity and Access (IAM)](https://us-east-1.console.aws.amazon.com/iamv2/home#/roles) roles.
+
+Click the [Create role](https://us-east-1.console.aws.amazon.com/iamv2/home#/roles/create?step=selectEntities) button in the upper right corner.
+
+For `Trusted entity type`, continue with the default `AWS service` and pick Lambda from the Use Case. Click `Next`.
+
+On the `Add permissions` page, click `Create policy`.  This will open a new tab for specifying teh permissions. On the `Specify Permissions` tab, change the policy editor from Visual to `JSON` by clicking the appropriate button in upper right corner.  Then paste in the following.  You'll need to change the resource ARN values for the s3 Bucket to match your bucket name
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "logs:CreateLogGroup",
+            "Resource": "arn:aws:logs:us-east-1::*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:::log-group:/aws/lambda/nodeless-example-api-handler:*",
+                "arn:aws:logs:::log-group:/aws/lambda/nodeless-example-build-maze-2307:*"
+            ]
+        },        
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction"
+            ],
+            "Resource": [
+                "*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:DeleteItem",
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:Scan",
+                "dynamodb:UpdateItem"
+            ],
+            "Resource": "arn:aws:dynamodb:::table/nodeless-example-orders/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketPolicyStatus",
+                "s3:GetBucketObjectLockConfiguration",
+                "s3:GetEncryptionConfiguration",
+                "s3:ListBucket",
+                "s3:GetBucketVersioning"
+            ],
+            "Resource": "arn:aws:s3:::nodeless-data-1693591359"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:DeleteObjectTagging",
+                "s3:PutObject",
+                "s3:GetObjectAcl",
+                "s3:GetObject",
+                "s3:DeleteObjectVersion",
+                "s3:GetObjectVersionTagging",
+                "s3:GetObjectVersionAcl",
+                "s3:GetObjectTagging",
+                "s3:PutObjectTagging",
+                "s3:DeleteObject",
+                "s3:PutObjectAcl",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::nodeless-data-1693591359/*"
+        }        
+    ]
+}
+```
+Click the `Next` button at the bottom right of the page. 
+
+Enter a name for the policy `nodeless-example-policy`. Click `Create policy` at the bottom right of the page. This tab can be closed once returned to the policy list.
+
+Return to the page where creating the role. Refresh the list of policies. Check the box for `nodeless-example-policy` and then click `Next`.  Name the role `nodeless-example-role` and click `Create role`
+
 ## AWS: Create Lambda for Nodeless Webhook and Order Processing
 
 This is the main lambda used for calls from users for placing orders, and for interfacing with Nodeless.
@@ -170,9 +266,9 @@ In the AWS Console, access the [AWS Lambda Functions](https://us-east-1.console.
 
 Click the [Create Function](https://us-east-1.console.aws.amazon.com/lambda/home?region=us-east-1#/create/function) button in the upper right corner.
 
-Lambda functions have a variety of parameters possible. For now, choose a suitable function name and leave the defaults for Runtime (Node.js 18.x at time of writing) and Architecture (x86_64).
+Lambda functions have a variety of parameters possible. For now, choose a suitable function name. This example assumes the name `nodeless-example-api-handler`. Keep the Runtime of `Node.js 18.x` and Architecture set to `x86_64`.  
 
-If you can't think of a name, choose something like `nodeless-example-api-handler`
+Click on the `Change default execution role` option, select `Use an existing role`. Specify the role name created above `nodeless-example-role`
 
 Click the `Create function` button.
 
