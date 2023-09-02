@@ -19,7 +19,7 @@ The steps at a high level
 7. Nodeless: Create Webhook
 8. AWS: Create s3 Bucket
 9. AWS: Create Dynamo Table
-10. AWS: Create Lambda Execution Role
+10. AWS: Create Identity and Access Management Policy and Role
 11. AWS: Create Lambda for Nodeless Webhook and Order Processing
 12. 
 13. AWS: Create Lambda for Building Order
@@ -163,7 +163,7 @@ For the partition key, specify `id`
 
 Leave the rest of the data defaulted and click `Create table` at the bottom.
 
-## AWS: Create Lambda Execution Role
+## AWS: Create Identity and Access Management Policy and Role
 
 Now we'll define a custom IAM role for use by the Lambda functions that will be created later.  This will have appropriate permissions for writing logs to cloudwatch, the necessary permissions for the DynamoDB table, and access to the S3 Bucket.
 
@@ -412,7 +412,7 @@ Click `Save`, then `Test`.  The full details for the order will be returned simi
 
 ## AWS: Create Lambda for Building Order
 
-The previous lambda is somewhat general purpose to facilitate order placement.  This lambda is focused on work for the MAZE2307 product type mapped to a function named build-maze-2307.  
+The previous lambda is somewhat general purpose to facilitate order placement.  This lambda is focused on work for the MAZE2307 product type mapped to a function named nodeless-example-build-maze-2307.  
 
 Another point of interest about this lambda, is that we'll be using a different runtime, accompanied by custom layers.  This sample leverages code from the [Nodeyez codebase](https://github.com/vicariousdrama/nodeyez), and as such requires using Python, and having available some key packages that do not come with the Python runtime by default.
 
@@ -423,6 +423,8 @@ Click the [Create Function](https://us-east-1.console.aws.amazon.com/lambda/home
 For function name, specify `build-maze-2307`. This should match the value referenced by the invokeBuilder function in the nodeless-example-api-handler
 
 For Runtime, choose Python 3.10 from Other Supported. And keep x86_64 as the architecture.
+
+Click on the `Change default execution role` option, select `Use an existing role`. Specify the role name created above `nodeless-example-role`
 
 Click the `Create function` button.
 
