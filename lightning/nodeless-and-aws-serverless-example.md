@@ -273,28 +273,36 @@ Click on the `Change default execution role` option, select `Use an existing rol
 
 Click the `Create function` button.
 
-Replace the existing contents of `index.mjs` with that from [nodeless-example/index.mjs](./nodeless-example/index.mjs)
+Download this zip file: [nodeless-example/nodeless-example-api-handler.zip](./nodeless-example/nodeless-example-api-handler.zip)
 
-Once pasted, click the "Deploy" button in the menu bar
+On the Code Source view, in the upper right corner, choose `Upload from` and pick `.zip file`.  Choose the nodeless-example-api-handler.zip and click the `Save` button
 
-Thats a fairly lengthy file. Here's a summary of each function's purpose:
+![image](https://github.com/vicariousdrama/howto/assets/88121568/3a0d7992-b7b3-4022-90e2-ab09b6f0e4e5)
 
+
+In the file tree to the left, you should see three files loaded for bip39words.mjs, index.mjs, and nodeless.mjs.  The primary entry point is the index.mjs file and contains the route definitions. Some supportive functions are in the other two files.
+
+In bip39words.mjs
 - makeId(timestamp) - converts a unix epoch time to words from the bip39 word list, reversed, and hyphenated
+
+In index.mjs
 - getOverageBySize(metadata) - For image products, a trivial formula for paying based on resulting size and computation
 - calcAmount(baseAmount, metadata, discount) - Based on the product type being ordered, the total can be increased based on order info
-- makeInvoice(satsAmount, orderId) - Calls nodeless.io to create an invoice for the given amount
-- getNodelessInvoice(id) - Using the nodeless invoice id, lookup the status of the invoice
 - getValueCodeDiscount(code) - If a discount code was given, this function will determine if its valid (and not expired) and returns the discount amount to apply
 - invokeBuilder(orderItem) - once an order has been paid for, this function calls a separate lambda to build the product in the background. There is hardcoding here that maps a product type `MAZE2307` to a function `nodeless-example-build-maze-2307` that could be made more dynamic by lookup in dynamo table or other resource, but for simplicity is retained structured in the example
+- handler - this is the primary entry point for the lambda an services requests that will come in through the api gateway
 
-Following functions you'll see two constants
+In nodeless.mjs
+- makeInvoice(satsAmount, orderId) - Calls nodeless.io to create an invoice for the given amount
+- getNodelessInvoice(id) - Using the nodeless invoice id, lookup the status of the invoice
 
-- export const handler - This is the entry point into the lambda and from which the functions above are called along with the intended API spec
-- b39 - This is the bip39 word list, delimited by spaces, then split into a list for reference by the makeId function
+Click the `Deploy` button on the menu bar if it indicates Changes not deployed
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/51e54330-7c8d-4fee-ab6e-ce8313081099)
 
 ## Configuration for Lambda
 
-After saving the code for the lambda function. Click the `Configuration` tab. 
+After saving any changes to the code and deploying the lambda function, cick the `Configuration` tab. 
 
 ### General Configuration
 
