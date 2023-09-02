@@ -30,8 +30,7 @@ The steps at a high level
 11. [AWS: Create Lambda for Nodeless Webhook and Order Processing](#aws-create-lambda-for-nodeless-webhook-and-order-processing)
 12. [AWS: Create Lambda for Building Order](#aws-create-lambda-for-building-order)
 13. [AWS: Edit API Gateway for Access](#aws-edit-api-gateway-for-access)
-14. [Modify Order Form with Endpoint](#modify-order-form-with-endpoint)
-15. [AWS: Upload Static Order Form Page to Bucket](#aws-upload-static-order-form-page-to-bucket)
+14. [AWS: Create Order Form](#aws-create-order-form)
 
 ---
 
@@ -546,7 +545,9 @@ If you retrieve the order without the detailed endpoint using the url `https://e
 
 Other operations can be tested using curl
 
-# Modify Order Form with Endpoint
+# AWS: Create Order Form
+
+The order form page is a static single page that can be served from anywhere. For convenience, we will have it hosted and served from the S3 bucket.  The Javascript in the page makes calls to the API Gateway for placing an order, checking its status, checking on discount codes, and also showing the invoice to be paid.
 
 Download this html file: [nodeless-example/maze.html](./nodeless-example/maze.html)
 
@@ -554,11 +555,15 @@ In a text editor, open the file and locate the line that sets the value for `api
 
 ![image](https://github.com/vicariousdrama/howto/assets/88121568/9c5b0814-998e-4251-946f-95213e2f0b63)
 
-Modify the value to reflect the endpoint for the API Gateway.  For the example created above, I would set this to `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/`
+Modify the value to reflect the endpoint for the API Gateway.  
+
+For the example created above, I would set this to `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/`
+
+You may want to modify the html to remove or change the support text and suggested value codes around line 745
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/8208acb5-d3ff-4bbf-83a8-bfca885a795c)
 
 Save the file.
-
-# AWS: Upload Static Order Form Page to Bucket
 
 In the AWS Console, access [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1#).
 
@@ -580,4 +585,4 @@ Test the form.
 
 You should be able to create an order, have an invoice generated with QR Code displayed, pay the invoice and have those sats sent from Nodeless to your configured lightning address.
 
-You may want to modify the html to remove or change the support text and suggested value codes.  
+
