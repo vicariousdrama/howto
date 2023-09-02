@@ -22,16 +22,9 @@ The steps at a high level
 10. AWS: Create Identity and Access Management Policy and Role
 11. AWS: Create Lambda for Nodeless Webhook and Order Processing
 12. AWS: Create Lambda for Building Order
-14. AWS: Edit API Gateway for Access
-15. 
-16. Modify Order Form with Endpoint
-17. AWS: Upload Static Order Form Page to Bucket
-
-
-todo
-- permissions and tests for lambda for building order
-- s3 static page
-
+13. AWS: Edit API Gateway for Access
+14. Modify Order Form with Endpoint
+15. AWS: Upload Static Order Form Page to Bucket
 
 ---
 
@@ -284,7 +277,7 @@ Thats a fairly lengthy file. Here's a summary of each function's purpose:
 - makeInvoice(satsAmount, orderId) - Calls nodeless.io to create an invoice for the given amount
 - getNodelessInvoice(id) - Using the nodeless invoice id, lookup the status of the invoice
 - getValueCodeDiscount(code) - If a discount code was given, this function will determine if its valid (and not expired) and returns the discount amount to apply
-- invokeBuilder(orderItem) - once an order has been paid for, this function calls a separate lambda to build the product in the background. There is hardcoding here that maps a product type `MAZE2307` to a function `build-maze-2307` that could be made more dynamic by lookup in dynamo table or other resource, but for simplicity is retained structured in the example
+- invokeBuilder(orderItem) - once an order has been paid for, this function calls a separate lambda to build the product in the background. There is hardcoding here that maps a product type `MAZE2307` to a function `nodeless-example-build-maze-2307` that could be made more dynamic by lookup in dynamo table or other resource, but for simplicity is retained structured in the example
 
 Following functions you'll see two constants
 
@@ -317,7 +310,7 @@ This lambda function expects 5 environment variables to be setup as follows:
 - nodelessApiKey - The API Token you received from Nodeless.io
 - nodelessStoreId - The store id for your store at Nodeless.io
 - nodelessWebookSecret - The Webhook secret for your store at Nodeless.io
-- valueCodes - For no discounts, just define as an empty string.  If you want to give discounts, then each discount code is comma delimted, and for each code configuration is colon delimited.  For example the value `CODE1:1000,CODE2:2000:1696118400` defines two codes (CODE1 and CODE2), where the first gives a discount of 1000 and the second 2000. The third argument on the second discount is an expiry time as defined in unix timestamp in seconds
+- valueCodes - For no discounts, just define as an empty string.  If you want to give discounts, then each discount code is comma delimted, and for each code configuration is colon delimited.  For example the value `CODE1:1000,CODE2:2000:1696118400,HoneyBadger:2100` defines three codes (CODE1, CODE2 and HoneyBadger), where the first gives a discount of 1000, the second 2000 and the third 2100. The third argument on the second discount is an expiry time as defined in unix timestamp in seconds
 
 Yes, I'm aware there are other ways to abstract out secrets such as the AWS Secrets Manager. For simplicity and reducing number of services needing to setup for this example they've been kept local.
 
@@ -548,8 +541,36 @@ Other operations can be tested using curl
 
 ## Modify Order Form with Endpoint
 
-TBD
+Download this html file: [nodeless-example/maze.html](./nodeless-example/maze.html)
+
+In a text editor, open the file and locate the line that sets the value for `apiBaseUrl`.  For context, this is line 194 and looks like the following
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/9c5b0814-998e-4251-946f-95213e2f0b63)
+
+Modify the value to reflect the endpoint for the API Gateway.  For the example created above, I would set this to `https://eahilxrhrg.execute-api.us-east-1.amazonaws.com/`
+
+Save the file.
 
 ## AWS: Upload Static Order Form Page to Bucket
 
-TBD
+In the AWS Console, access [Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-east-1#).
+
+Traverse into the bucket you've created.  In this example it is `nodeless-data-1693591359`, but yours will be something different.
+
+Click the `Upload` button. Then choose `Add files`. Select your modified `maze.html` file from the previous section.
+
+Click the `Upload` button to complete the upload.
+
+Click the file in the bucket that was just uploaded to review s3 details.  Locate the `Object URL` on the right side and copy the URL.  Open a new browser tab and paste the URL.
+
+The url should be in the following form
+
+`https://{your-s3-bucket-name}.s3.amazonaws.com/maze.html`
+
+Test the form.  
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/e1668244-be0f-4666-b812-2a4dd27ad925)
+
+You should be able to create an order, have an invoice generated with QR Code displayed, pay the invoice and have those sats sent from Nodeless to your configured lightning address.
+
+You may want to modify the html to remove or change the support text and suggested value codes.  
