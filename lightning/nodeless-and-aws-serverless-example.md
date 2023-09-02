@@ -3,7 +3,7 @@ _An example of integrating AWS Serverless with Nodeless.io and accepting payment
 
 by @vicariousdrama
 
-805752-805826
+805752-805929
 
 ---
 
@@ -111,7 +111,11 @@ Make note of the generated Secret value.  You'll need to capture this and use in
 Choose these events
 - Invoice Created
 - Invoice Paid
+- Invoice Overpaid
 - Invoice Expired
+ 
+![image](https://github.com/vicariousdrama/howto/assets/88121568/7c041a29-360f-4e6c-8503-4d2103b6c3ee)
+
 
 Click the `Save` button when complete.
 
