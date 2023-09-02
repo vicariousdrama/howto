@@ -271,8 +271,49 @@ Click `Create new event`. For event name, specify `test-post-orders`. In the Eve
 }
 ```
 
-Click `Save`, then `Test`. If you had defined the valueCodes environment variable to include CODE1, as sampled above, you'll see a response like the following
+Click `Save`, then `Test`. If you had defined the valueCodes environment variable to include CODE1, as sampled above, you'll see a much more lengthier response that includes an id indicating and ORDER number, status, satsAmount, storeInvoiceId and others if able to communicate with Nodeless.  This will have a lighthingInvoice, qrCode and more.
 
+![image](https://github.com/vicariousdrama/howto/assets/88121568/6e58b7d7-6f51-4818-a3da-d009593f9dba)
+
+Make note of the ORDER value to use for the next test. In my test run the order number was `ORDER-RAOBIV-ICLI-ASUORG`
+
+#### test-get-order
+
+Click `Create new event`. For event name, specify `test-get-order`. In the Event JSON block, paste the following:
+
+Replace the id value to match that from the response of the order post
+
+```json
+{
+  "routeKey": "GET /orders/{id}",
+  "pathParameters": {
+    "id": "ORDER-RAOBIV-ICLI-ASUORG"
+  }
+}
+```
+
+Click `Save`, then `Test`.
+
+![image](https://github.com/vicariousdrama/howto/assets/88121568/6142d5a6-5f58-461b-ae1d-bf32fc2e42ed)
+
+The response body indicates a status (s) of new (n).
+
+#### test-get-order-detailed
+
+Click `Create new event`. For event name, specify `test-get-order-detailed`. In the Event JSON block, paste the following:
+
+Replace the id value to match that from the response of the order post
+
+```json
+{
+  "routeKey": "GET /orders/{id}/detailed",
+  "pathParameters": {
+    "id": "ORDER-RAOBIV-ICLI-ASUORG"
+  }
+}
+```
+
+Click `Save`, then `Test`.  The full details for the order will be returned similar to that returned when posting the order.
 
 ## AWS: Create Lambda for Building Order
 
