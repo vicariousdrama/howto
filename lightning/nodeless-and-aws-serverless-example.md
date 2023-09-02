@@ -453,7 +453,21 @@ This lambda function expects 5 environment variables to be setup as follows:
 
 Click the `Test` tab at the top.  We'll setup some test events to verify things are working as expected.
 
-TBD
+#### test-build-order
+
+Click `Create new event`. For event name, specify `test-build-order`. In the Event JSON block, paste the following:
+
+Replace the id value to match that from the response of the order post
+
+```json
+{
+  "orderId": "ORDER-RAOBIV-ICLI-ASUORG"
+}
+```
+
+Click `Save`, then `Test`.
+
+
 
 ## AWS: Edit API Gateway for Access
 
