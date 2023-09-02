@@ -28,6 +28,12 @@ The steps at a high level
 
 ---
 
+# High Level Architecture
+
+This howto will walk you through the steps of setting up a serverless setup in AWS Cloud that uses nodeless as a payment processor.  Within nodeless, you'll configure the store, a webhook for events, and API token.  Within AWS Cloud, an API Gateway will act as the primary _front door_ to API calls for the user orders, as well as webhooks from nodeless. A general Lambda function will handle the routes from the API Gateway, and a specialized one will serve as an example of an invocation to build a product after the invoice has been paid. A DyanmoDB Table is used as a basic data store for meta information, while files created are placed in an S3 bucket given public access for reading.
+
+![high level diagram](./nodeless-example/nodeless-and-aws-serverless-example.drawio.png)
+
 # Nodeless.io
 
 Nodeless lets you accept bitcoin and lightning payments without needing to setup the server infrastructure. You don't need to run your own node, or establish your own server payemnt provider. Instead, you can create an account with Nodeless and have it route finalized payments to lightning address or on chain address.  It works very well with custodial providers for the Bitcoin circular economy.
