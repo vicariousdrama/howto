@@ -46,11 +46,13 @@ Amazon Web Services have been around for nearly two decades and is a leader in s
 
 If you haven't already done so, [create an account](https://portal.aws.amazon.com/gp/aws/developer/registration/index.html) or [login](https://console.aws.amazon.com/console/home) to the console.
 
+When configuring each of the parts of this workflow, it is strongly recommended to keep everything in the same region.  The initial default region for AWS was us-east-1. If you are using a different region, pay careful attention to that in any policy definitions or urls and ensure you keep it consistent.
+
 # Nodeless: Setup Withdraw Settings
 
 From the Administration submenu on the left, choose `Withdraw`.  Then pick the Withdraw Settings.
 
-Modify the settings on this page as appropriate to setup your Lightning Address and an On-chain Address. I recommend the Lightning Address as teh default payment method.
+Modify the settings on this page as appropriate to setup your Lightning Address and an On-chain Address. I recommend the Lightning Address as the default payment method.
 
 # Nodeless: Create Store
 
