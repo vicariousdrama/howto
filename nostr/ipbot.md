@@ -37,10 +37,10 @@ wget https://raw.githubusercontent.com/vicariousdrama/howto/main/nostr/ipbot.py
 
 ## Configuration
 
-Configure a file in the same folder named ipbot.json
+Configure a file in the same folder named config.json
 
 ```sh
-nano ipbot.json
+nano config.json
 ```
 
 And structure its contents as follows.
