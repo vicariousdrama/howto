@@ -121,7 +121,7 @@ if __name__ == '__main__':
             lastMessageSent = currenttime
             changeCount = changeCountReportMax
         # Additional DMs when counter above 0 to draw attention to issue
-        if changeCount > 0:
+        elif changeCount > 0:
             nostrMessage = f"{statusRecentlyChanged} IP recently changed to {ip}"
             sendNostrDM(senderPrivateKey=botKey, recipientPubKey=sendToPubKey, message=nostrMessage)
             changeCount = changeCount - 1
