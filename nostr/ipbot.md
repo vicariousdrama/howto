@@ -31,6 +31,9 @@ cd ~/nostripbot
 
 And download the file
 
+```sh
+wget https://raw.githubusercontent.com/vicariousdrama/howto/main/nostr/ipbot.py
+```
 
 ## Configuration
 
